@@ -75,6 +75,7 @@ export const getServerSideProps = async () => {
     fetch(requests.fetchRomanceMovies).then((res) => res.json()),
     fetch(requests.fetchDocumentaries).then((res) => res.json()),
   ]);
+  console.log(netflixOriginals.results);
 
   return {
     props: {
