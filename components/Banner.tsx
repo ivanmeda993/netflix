@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { baseUrl } from "../constants/movies";
 import { FaPlay } from "react-icons/fa";
 import { InformationCircleIcon } from "@heroicons/react/solid";
+import { useRecoilState } from "recoil";
+import { modalState, movieState } from "../atoms/modalAtom";
 
 interface Props {
   netflixOriginals: Movie[];
@@ -13,19 +15,22 @@ const Banner = ({ netflixOriginals }: Props) => {
   const [randomMovie, setRandomMovie] = useState<Movie | null>(null);
   const [coverImg, setCoverImg] = useState<string | undefined>("");
 
+  const [movie, setMovie] = useRecoilState(movieState);
+  const [showModal, setShowModal] = useRecoilState(modalState);
+
   useEffect(() => {
     setRandomMovie(
       netflixOriginals[Math.floor(Math.random() * netflixOriginals.length)]
     );
   }, [netflixOriginals]);
-  // console.log(netflixOriginals);
+
   return (
     <div className="flex flex-col space-y-2 py-16 md:space-y-4 lg:h-[65vh] lg:justify-end lg:pb-12">
       <div className="absolute top-0 left-0 -z-10 h-[95vh] w-screen">
         <Image
           layout="fill"
           src={`https://image.tmdb.org/t/p/original${
-            randomMovie?.poster_path || randomMovie?.backdrop_path
+            randomMovie?.backdrop_path || randomMovie?.poster_path
           }`}
           objectFit="cover"
         />
@@ -40,7 +45,13 @@ const Banner = ({ netflixOriginals }: Props) => {
         <button className="bannerBtn bg-white text-black">
           <FaPlay className="h-4 w-4 text-black md:h-7 md:w-7" /> Play
         </button>
-        <button className="bannerBtn bg-[gray]/70">
+        <button
+          className="bannerBtn bg-[gray]/70"
+          onClick={() => {
+            setMovie(randomMovie);
+            setShowModal(true);
+          }}
+        >
           More Info <InformationCircleIcon className="w-5 h-5 md:w-8 md:h-8" />
         </button>
       </div>
